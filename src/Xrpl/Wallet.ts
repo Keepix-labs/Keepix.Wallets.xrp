@@ -218,7 +218,6 @@ export class Wallet {
       })
       const signed = this.wallet.sign(prepared)
       const tx = await client.submitAndWait(signed.tx_blob)
-      console.log(tx)
 
       await client.disconnect()
       if ((tx.result.meta as any)?.TransactionResult === 'tesSUCCESS') {
