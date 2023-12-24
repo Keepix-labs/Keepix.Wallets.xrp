@@ -3,6 +3,10 @@
 Library that respects the WalletLibraryInterface.  
 This library is used to create wallets, hold coin and token balances and carry out transactions.
 
+XRPL tokens explorer:
+
+```https://xrpl.to/token/sologenic```  
+
 ```js
 class Wallet {
     constructor({}: {

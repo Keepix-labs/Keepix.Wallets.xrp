@@ -5,7 +5,9 @@ describe('basic wallet', () => {
     'celery net original hire stand seminar cricket reject draft hundred hybrid dry three chair sea enable perfect this good race tooth junior beyond since'
   const privateKey =
     '00C39B242464E13A05D27444513BC1A516419777714EE44E3C21A3D7C4B86BAE56'
-  const address = 'rEg1y1RXRYgsRnQK1MhcEZ45A6sq8GzpwJ'
+  const address = 'rEg1y1RXRYgsRnQK1MhcEZ45A6sq8GzpwJ';
+
+  const rpc = { url: 'wss://testnet.xrpl-labs.com/' };
 
   it('can generate same wallet', async () => {
     const wallet = new Wallet({ password: 'toto', type: 'xrpl' })
@@ -42,7 +44,7 @@ describe('basic wallet', () => {
     const wallet = new Wallet({
       password: 'toto',
       type: 'xrpl',
-      rpc: 'wss://testnet.xrpl-labs.com/',
+      rpc: rpc,
     })
     expect(
       await wallet.getCoinBalance('rKzZivQ8yM5gVG5qRvw44bqFada1gcSX2W'),
@@ -53,7 +55,7 @@ describe('basic wallet', () => {
     const wallet = new Wallet({
       password: 'toto',
       type: 'xrpl',
-      rpc: 'wss://testnet.xrpl-labs.com/',
+      rpc: rpc,
     })
     expect(
       await wallet.getTokenBalance(
@@ -67,7 +69,7 @@ describe('basic wallet', () => {
     const wallet = new Wallet({
       password: 'toto',
       type: 'xrpl',
-      rpc: 'wss://testnet.xrpl-labs.com/',
+      rpc: rpc,
     })
     const estimationResult = await wallet.sendCoinTo(
       'rUeSqbu6wmJc6fkYzgkyBuqywr6pRTYhuZ',
@@ -80,7 +82,7 @@ describe('basic wallet', () => {
     const wallet = new Wallet({
       password: 'toto',
       type: 'xrpl',
-      rpc: 'wss://testnet.xrpl-labs.com/',
+      rpc: rpc,
     })
     const estimationResult = await wallet.sendTokenTo(
       'AAA.rNYuQ1Bf972uuMMnAXozesZ5MZo4TCs29b',
