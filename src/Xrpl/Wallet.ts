@@ -115,6 +115,17 @@ export class Wallet {
     }
   }
 
+  public async getTokenInformation(tokenAddress: string) {
+    try {
+      const [code, issuer] = tokenAddress.split('.')
+
+      return { name: code, symbol: code, decimals: 0 }
+    } catch (err) {
+      console.log(err)
+      return undefined
+    }
+  }
+
   // always display the balance in 0 decimals like 1.01 RPL
   public async getTokenBalance(tokenAddress: string, walletAddress?: string) {
     try {
