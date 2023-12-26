@@ -5,9 +5,9 @@ describe('basic wallet', () => {
     'celery net original hire stand seminar cricket reject draft hundred hybrid dry three chair sea enable perfect this good race tooth junior beyond since'
   const privateKey =
     '00C39B242464E13A05D27444513BC1A516419777714EE44E3C21A3D7C4B86BAE56'
-  const address = 'rEg1y1RXRYgsRnQK1MhcEZ45A6sq8GzpwJ';
+  const address = 'rEg1y1RXRYgsRnQK1MhcEZ45A6sq8GzpwJ'
 
-  const rpc = { url: 'wss://testnet.xrpl-labs.com/' };
+  const rpc = { url: 'wss://testnet.xrpl-labs.com/' }
 
   it('can generate same wallet', async () => {
     const wallet = new Wallet({ password: 'toto', type: 'xrpl' })
@@ -63,6 +63,20 @@ describe('basic wallet', () => {
         'rKzZivQ8yM5gVG5qRvw44bqFada1gcSX2W',
       ),
     ).toEqual('1000')
+  })
+
+  it('can getTokenInformation', async () => {
+    const wallet = new Wallet({
+      password: 'toto',
+      type: 'xrpl',
+      rpc: rpc,
+    })
+
+    expect(
+      await wallet.getTokenInformation(
+        'CNY.razqQKzJRdB4UxFPWf5NEpEG3WMkmwgcXA',
+      ),
+    ).toEqual({ name: 'RippleChina', symbol: 'CNY', decimals: 0 })
   })
 
   it('can estimate sendCoin', async () => {
