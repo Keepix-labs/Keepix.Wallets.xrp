@@ -46,15 +46,20 @@ export class Wallet {
     rpc?: any
     privateKeyTemplate?: string
   }) {
-    this.type = type;
+    this.type = type
     // select one random RPC or override
-    if (keepixTokens != undefined
-      && keepixTokens.coins[type] !== undefined
-      && keepixTokens.coins[type].rpcs != undefined) {
-        this.rpc = keepixTokens.coins[type].rpcs[Math.floor(Math.random()*keepixTokens.coins[type].rpcs.length)].url;
+    if (
+      keepixTokens != undefined &&
+      keepixTokens.coins[type] !== undefined &&
+      keepixTokens.coins[type].rpcs != undefined
+    ) {
+      this.rpc =
+        keepixTokens.coins[type].rpcs[
+          Math.floor(Math.random() * keepixTokens.coins[type].rpcs.length)
+        ].url
     }
     if (rpc !== undefined && rpc.url !== '') {
-      this.rpc = rpc.url;
+      this.rpc = rpc.url
     }
 
     // from password
@@ -127,13 +132,46 @@ export class Wallet {
     }
   }
 
+  public async getTokenInformation(tokenAddress: string) {
+    try {
+      const [code, issuer] = tokenAddress.split('.')
+
+      const xrpData = await fetch(
+        `https://api.xrpscan.com/api/v1/account/${issuer}`,
+      ).then((res) => res.json())
+      const bitData = await fetch(
+        `https://bithomp.com/api/v2/address/${issuer}?username=true`,
+        {
+          headers: {
+            ['x-bithomp-token']: 'ef587d16-d9b8-4c7a-86e5-a87ebfd3a2b4',
+          },
+        },
+      ).then((res) => res.json())
+
+      return {
+        name:
+          bitData?.username ??
+          xrpData?.accountName?.name ??
+          xrpData?.accountName?.username ??
+          code,
+        symbol: code,
+        decimals: 0,
+      }
+    } catch (err) {
+      console.log(err)
+      return undefined
+    }
+  }
+
   // always display the balance in 0 decimals like 1.01 RPL
   public async getTokenBalance(tokenAddress: string, walletAddress?: string) {
     let client = undefined;
     try {
+      console.log(this.getTokenInformation(tokenAddress))
       const [code, issuer] = tokenAddress.split('.')
       client = await this.getProdiver()
       await client.connect()
+
       const balance = await client.getBalances(
         walletAddress ?? this.getAddress(),
       )
@@ -238,7 +276,6 @@ export class Wallet {
       })
       const signed = this.wallet.sign(prepared)
       const tx = await client.submitAndWait(signed.tx_blob)
-      console.log(tx)
 
       if (client.isConnected()) {
         await client.disconnect()
