@@ -1,6 +1,6 @@
 {
   "name": "@keepix/wallets-xrpl",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Wallets Xrpl library",
   "private": false,
   "main": "dist/index.js",
