@@ -107,43 +107,56 @@ export class Wallet {
 
   // always display the balance in 0 decimals like 1.01 XRP
   public async getCoinBalance(walletAddress?: string) {
+    let client = undefined;
     try {
-      const client = await this.getProdiver()
+      client = await this.getProdiver()
       await client.connect()
       const balance = await client.getBalances(
         walletAddress ?? this.getAddress(),
       )
-      await client.disconnect()
+      if (client.isConnected()) {
+        await client.disconnect()
+      }
       return balance.find((item) => item.currency === 'XRP')?.value ?? '0'
     } catch (err) {
       console.log(err)
+      if (client !== undefined && client.isConnected()) {
+        await client.disconnect();
+      }
       return '0'
     }
   }
 
   // always display the balance in 0 decimals like 1.01 RPL
   public async getTokenBalance(tokenAddress: string, walletAddress?: string) {
+    let client = undefined;
     try {
       const [code, issuer] = tokenAddress.split('.')
-      const client = await this.getProdiver()
+      client = await this.getProdiver()
       await client.connect()
       const balance = await client.getBalances(
         walletAddress ?? this.getAddress(),
       )
-      await client.disconnect()
+      if (client.isConnected()) {
+        await client.disconnect()
+      }
       return (
         balance.find((item) => item.currency === code && item.issuer === issuer)
           ?.value ?? '0'
       )
     } catch (err) {
-      console.log(err)
+      console.log(err);
+      if (client !== undefined && client.isConnected()) {
+        await client.disconnect();
+      }
       return '0'
     }
   }
 
   public async estimateCostSendCoinTo(receiverAddress: string, amount: string) {
+    let client = undefined;
     try {
-      const client = await this.getProdiver()
+      client = await this.getProdiver()
       await client.connect()
 
       const prepared = await client.autofill({
@@ -153,17 +166,23 @@ export class Wallet {
         Destination: receiverAddress,
       })
 
-      await client.disconnect()
+      if (client.isConnected()) {
+        await client.disconnect()
+      }
       return { success: true, description: (prepared as any)?.Fee ?? '0' }
     } catch (err) {
       console.log(err)
+      if (client !== undefined && client.isConnected()) {
+        await client.disconnect();
+      }
       return { success: false, description: `Estimation Failed: ${err}` }
     }
   }
 
   public async sendCoinTo(receiverAddress: string, amount: string) {
+    let client = undefined;
     try {
-      const client = await this.getProdiver()
+      client = await this.getProdiver()
       await client.connect()
 
       const prepared = await client.autofill({
@@ -175,7 +194,9 @@ export class Wallet {
       const signed = this.wallet.sign(prepared)
       const tx = await client.submitAndWait(signed.tx_blob)
 
-      await client.disconnect()
+      if (client.isConnected()) {
+        await client.disconnect()
+      }
       if ((tx.result.meta as any)?.TransactionResult === 'tesSUCCESS') {
         return { success: true, description: tx.result.hash }
       } else {
@@ -186,6 +207,9 @@ export class Wallet {
       }
     } catch (err) {
       console.log(err)
+      if (client !== undefined && client.isConnected()) {
+        await client.disconnect();
+      }
       return { success: false, description: `Transaction Failed: ${err}` }
     }
   }
@@ -195,10 +219,11 @@ export class Wallet {
     receiverAddress: string,
     amount: string,
   ) {
+    let client = undefined;
     try {
       const [code, issuer] = tokenAddress.split('.')
 
-      const client = await this.getProdiver()
+      client = await this.getProdiver()
       await client.connect()
 
       const prepared = await client.autofill({
@@ -215,7 +240,9 @@ export class Wallet {
       const tx = await client.submitAndWait(signed.tx_blob)
       console.log(tx)
 
-      await client.disconnect()
+      if (client.isConnected()) {
+        await client.disconnect()
+      }
       if ((tx.result.meta as any)?.TransactionResult === 'tesSUCCESS') {
         return { success: true, description: tx.result.hash }
       } else {
@@ -225,7 +252,10 @@ export class Wallet {
         }
       }
     } catch (err) {
-      console.log(err)
+      console.log(err);
+      if (client !== undefined && client.isConnected()) {
+        await client.disconnect();
+      }
       return { success: false, description: `Transaction Failed: ${err}` }
     }
   }
@@ -235,10 +265,11 @@ export class Wallet {
     receiverAddress: string,
     amount: string,
   ) {
+    let client = undefined;
     try {
       const [code, issuer] = tokenAddress.split('.')
 
-      const client = await this.getProdiver()
+      client = await this.getProdiver()
       await client.connect()
 
       const prepared = await client.autofill({
@@ -252,10 +283,15 @@ export class Wallet {
         Destination: receiverAddress,
       })
 
-      await client.disconnect()
+      if (client.isConnected()) {
+        await client.disconnect()
+      }
       return { success: true, description: (prepared as any)?.Fee ?? '0' }
     } catch (err) {
       console.log(err)
+      if (client !== undefined && client.isConnected()) {
+        await client.disconnect();
+      }
       return { success: false, description: `Estimation Failed: ${err}` }
     }
   }
